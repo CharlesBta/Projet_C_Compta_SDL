@@ -1,3 +1,11 @@
+/*
+Macos : 
+gcc main.c -o main $(sdl2-config --cflags --libs) -lSDL2_ttf -lSDL2_image
+./main
+
+Windows :
+
+*/
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>

@@ -1,0 +1,2 @@
+Faire les zone (6 stacks et gestionaire)
+Faire la liste entrepot (csv and list object)
