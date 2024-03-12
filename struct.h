@@ -6,9 +6,6 @@ gcc main.c -o main $(sdl2-config --cflags --libs) -lSDL2_ttf -lSDL2_image
 Windows :
 
 */
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_image.h>
 
 typedef enum Bool
 {
@@ -23,12 +20,14 @@ typedef struct Mouse
 } Mouse;
 
 typedef struct Object{
+    int ID;
     char Name[50];
+    SDL_Rect rect;
 }Object;
 
 typedef struct ObjectPile{
     Object *object;
-    struct Object *next;
+    struct ObjectPile *next;
 }ObjectPile;
 
 typedef struct Stack{

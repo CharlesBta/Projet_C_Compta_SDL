@@ -1,6 +1,7 @@
 #include "include.h"
 
 #include "struct.h"
+#include "tools_for_stock.c"
 
 #define WINDOWTITLE "SDL2 - Projet"
 #define WINDOWWIDTH 1600
