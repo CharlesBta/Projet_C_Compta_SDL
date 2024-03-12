@@ -8,10 +8,7 @@ gcc -std=c17 main.c -IC:\SDL\Projet_C_Compta_SDL\SDL2\x86_64-w64-mingw32\
 include -LC:\SDL\Projet_C_Compta_SDL\SDL2\x86_64-w64-mingw32\lib
  -Wall -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o main
 
-
 */
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 
 typedef enum Bool
 {
@@ -26,12 +23,14 @@ typedef struct Mouse
 } Mouse;
 
 typedef struct Object{
+    int ID;
     char Name[50];
+    SDL_Rect rect;
 }Object;
 
 typedef struct ObjectPile{
     Object *object;
-    struct Object *next;
+    struct ObjectPile *next;
 }ObjectPile;
 
 typedef struct Stack{
