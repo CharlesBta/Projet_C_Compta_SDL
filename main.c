@@ -131,25 +131,6 @@ int main(int argc, char *argv[])
     Bool running = TRUE;
     Mouse mouse;
 
-
-    AddObject(&stacks[0], *creat_Object("Pomme"));
-    AddObject(&stacks[0], *creat_Object("Poire"));
-    AddObject(&stacks[1], *creat_Object("Banane"));
-    AddObject(&stacks[0], *creat_Object("Orange"));
-
-    AddObject(&stacks[5], *creat_Object("Pomme"));
-    AddObject(&stacks[5], *creat_Object("Poire"));
-    AddObject(&stacks[5], *creat_Object("Banane"));
-    AddObject(&stacks[5], *creat_Object("Orange"));
-    AddObject(&stacks[5], *creat_Object("Pomme"));
-    AddObject(&stacks[5], *creat_Object("Poire"));
-    AddObject(&stacks[5], *creat_Object("Banane"));
-    AddObject(&stacks[5], *creat_Object("Orange"));
-
-    deleteObjectFromStack(&stacks[0], 0);
-
-    
-
     while (running)
     {
         while (SDL_PollEvent(&event))
