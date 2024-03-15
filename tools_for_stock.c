@@ -1,15 +1,15 @@
 int nbObjects = 0;
 
-void AddObject(Stack *stack, Object object)
+void addObject(Stack *stack, Object object)
 {
     ObjectPile *newPile = malloc(sizeof(ObjectPile));
-    if (stack->quantity < 5)
+    if (stack->y + 20 + (40 * stack->quantity) < stack->y + stack->h - 40)
     {
-        object.rect = (SDL_Rect){stack->x + 80, stack->y + 20 + (40 * stack->quantity), 100, 30};
+        object.rect = (SDL_Rect){(stack->x + STACKWIDTH*0.2), stack->y + 20 + (40 * stack->quantity), 100, 30};
     }
     else
     {
-        object.rect = (SDL_Rect){stack->x + 200, stack->y + 20 + (40 * (stack->quantity - 5)), 100, 30};
+        object.rect = (SDL_Rect){stack->x + 200, stack->y + 20 + (40 * (stack->quantity - (stack->y + stack->h - 40)/40)), 100, 30};
     }
     stack->quantity++;
     newPile->object = &object;
