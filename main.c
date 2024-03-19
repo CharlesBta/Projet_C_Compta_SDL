@@ -125,8 +125,9 @@ int main(int argc, char *argv[]) {
     addObject(&stacks[0], creat_Object("Pomme"));
     addObject(&stacks[0], creat_Object("Pomme"));
     addObject(&stacks[4], creat_Object("Pomme"));
-    addObject(&stacks[5], creat_Object("Pomme"));
+    addObject(&stacks[5], creat_Object("Poire"));
 
+    printf("count : %d\n", countObject(stacks, "Pomme"));
     while (running) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {

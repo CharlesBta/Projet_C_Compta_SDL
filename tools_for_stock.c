@@ -150,3 +150,23 @@ int deleteObject(Stack stacks[], int ID)
     stackModified->head = pile;
     return 0;
 }
+
+int countObject(Stack stack[], char Name[50])
+{
+    int count = 0;
+    for (int i = 0; i < 6; i++)
+    {
+        ObjectPile *pile = stack[i].head;
+        while (stack[i].head != NULL)
+        {
+            if (strcmp(stack[i].head->object->Name, Name) == 0)
+            {
+                count++;
+            }
+            stack[i].head = stack[i].head->next;
+        }
+        stack[i].head = pile;
+    }
+    return count;
+}
+
