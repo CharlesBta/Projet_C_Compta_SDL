@@ -133,3 +133,20 @@ int deleteObject(Stack stacks[], int ID)
     stackModified->head = pile;
     return 0;
 }
+
+int quantityOf(Stack stacks[], const char objectName[50]) {
+    int count = 0;
+
+    for (int i = 0; i < 6; i++) {
+        ObjectPile *currentPile = stacks[i].head;
+
+        while (currentPile != NULL) {
+            if (strcmp(currentPile->object->Name, objectName) == 0) {
+                count++;
+            }
+            currentPile = currentPile->next;
+        }
+    }
+
+    return count;
+}

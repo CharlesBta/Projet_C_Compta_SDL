@@ -7,7 +7,7 @@
 #define WINDOWHEIGHT 500
 #define FPS 60
 
-#define STACKWIDTH WINDOWWIDTH/3
+#define STACKWIDTH WINDOWWIDTH/3-60
 #define STACKHEIGHT WINDOWHEIGHT/2
 
 #define POLICE_SIZE 20
@@ -17,10 +17,10 @@
 Stack stacks[6] = {
     {.x = 0, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 0, .g=0, .b=255, .a=255},
     {.x = STACKWIDTH, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 0, .g=255, .b=0, .a=255},
-    {.x = 2 * STACKWIDTH, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=0, .b=0, .a=255},
+    {.x = 2 * STACKWIDTH-60, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=0, .b=0, .a=255},
     {.x = 0, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=165, .b=0, .a=255},
     {.x = STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 128, .g=0, .b=128, .a=255},
-    {.x = 2 * STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=192, .b=203, .a=255}
+    {.x = 2 * STACKWIDTH-60, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=192, .b=203, .a=255}
 };
 
 
