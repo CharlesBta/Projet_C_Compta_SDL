@@ -11,16 +11,30 @@
 
 #define POLICE_SIZE 20
 
+typedef struct colors {
+    int r, g, b, a;
+    char text[1024];
+} colors;
+
+colors color[5]= {
+        {.r = 255, .g = 0, .b = 0, .a = 255, .text = "Pomme"},
+        {.r = 0, .g = 255, .b = 0, .a = 255, .text = "Poire"},
+        {.r = 255, .g = 255, .b = 0, .a = 255, .text = "Banane"},
+        {.r = 255, .g = 165, .b = 0, .a = 255, .text = "Orange"},
+        {.r = 255, .g = 0, .b = 255, .a = 255, .text = "Fraise"}
+};
+
+
 #include "tools_for_stock.c"
 
 // Définition des stacks
 Stack stacks[6] = {
-        {.x = 0, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 0, .g=0, .b=255, .a=255, .ID = 0},
-        {.x = STACKWIDTH, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 0, .g=255, .b=0, .a=255, .ID = 1},
-        {.x = 2 * STACKWIDTH, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=0, .b=0, .a=255, .ID = 2},
-        {.x = 0, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=165, .b=0, .a=255, .ID = 3},
-        {.x = STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 128, .g=0, .b=128, .a=255, .ID = 4},
-        {.x = 2 * STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=192, .b=203, .a=255, .ID = 5}
+        {.x = 0, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 200, .g=200, .b=200, .a=255, .ID = 0},
+        {.x = STACKWIDTH, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 150, .g=150, .b=150, .a=255, .ID = 1},
+        {.x = 2 * STACKWIDTH, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 200, .g=200, .b=200, .a=255, .ID = 2},
+        {.x = 0, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 150, .g=150, .b=150, .a=255, .ID = 3},
+        {.x = STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 200, .g=200, .b=200, .a=255, .ID = 4},
+        {.x = 2 * STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 150, .g=150, .b=150, .a=255, .ID = 5}
 };
 
 Manager manager = {.x = 3 * STACKWIDTH, .y = 0, .r = 0, .g = 0, .b = 0, .a = 255};
@@ -56,7 +70,7 @@ void fillObjectInStack(SDL_Renderer *renderer) {
     for (int i = 0; i < 6; i++) {
         ObjectPile *pile = stacks[i].head;
         while (stacks[i].head != NULL) {
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_SetRenderDrawColor(renderer, stacks[i].head->object->r, stacks[i].head->object->g, stacks[i].head->object->b, 255);
             SDL_RenderFillRect(renderer, &stacks[i].head->object->rect);
             stacks[i].head = stacks[i].head->next;
         }

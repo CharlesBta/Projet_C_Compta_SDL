@@ -25,6 +25,7 @@ typedef struct Mouse
 typedef struct Object{
     int ID;
     char Name[50];
+    int r, g, b, a;
     SDL_Rect rect;
 }Object;
 

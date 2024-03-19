@@ -40,6 +40,15 @@ Object *creat_Object(char Name[50])
     object->ID = nbObjects;
     nbObjects++;
     strcpy(object->Name, Name);
+    for (int i = 0; i < 5; ++i) {
+        if (strcmp(Name, color[i].text) == 0)
+        {
+            object->r = color[i].r;
+            object->g = color[i].g;
+            object->b = color[i].b;
+            object->a = color[i].a;
+        }
+    }
     return object;
 }
 
@@ -170,7 +179,7 @@ int countObject(Stack stack[], char Name[50])
     return count;
 }
 
-void creatText(Manager *manager, char text[1024])
+void creatText(Manager *manager, char text[1024], int indexColor)
 {
     printf("text : %s\n", text);
 
@@ -179,7 +188,7 @@ void creatText(Manager *manager, char text[1024])
     manager->head = newText;
     strcpy(newText->text, text);
 
-    newText->surface_text = TTF_RenderText_Solid(manager->font, newText->text, (SDL_Color){0, 255, 255});
+    newText->surface_text = TTF_RenderText_Solid(manager->font, newText->text, (SDL_Color){color[indexColor].r, color[indexColor].g, color[indexColor].b});
     newText->texture_text = SDL_CreateTextureFromSurface(manager->renderer, newText->surface_text);
 
     newText->renderQuad = (SDL_Rect){manager->x + 20, manager->y + 50 + (manager->quantity * 25), newText->surface_text->w, 25};
@@ -192,5 +201,14 @@ void count(Manager *manager, Stack stack[], char name[])
     int count = countObject(stack, name);
     char text[1024];
     snprintf(text, sizeof (text), "%s : %d", name, count);
-    creatText(manager, text);
+
+    int indexColor = 0;
+
+    for (int i = 0; i < 5; ++i) {
+        if (strcmp(name, color[i].text) == 0)
+        {
+            indexColor = i;
+        }
+    }
+    creatText(manager, text, indexColor);
 }
