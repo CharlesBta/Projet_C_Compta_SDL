@@ -22,10 +22,10 @@ typedef struct Mouse
     int y;
 } Mouse;
 
-typedef struct colors {
+typedef struct Colors {
     int r, g, b, a;
     char text[1024];
-} colors;
+} Colors;
 
 typedef struct Object{
     int ID;
@@ -55,6 +55,7 @@ typedef struct Stack{
 typedef struct Text{
     char text[1024];
     int quantity;
+    int indexColor;
     int x,y;
     int r, g, b, a;
     SDL_Surface *surface_text;

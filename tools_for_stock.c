@@ -1,21 +1,19 @@
 int nbObjects = 0;
 
-Bool addObject(Stack *stack, Object *object)
-{
+Bool addObject(Stack *stack, Object *object) {
     ObjectPile *newPile = malloc(sizeof(ObjectPile));
 
     int StackTopMargin = STACKHEIGHT * 0.05;
     int ObjectMargin = 20;
     int ObjectWidth = 80;
     int ObjectHeight = 30;
-    int StackInLineMargin =(STACKWIDTH - (ObjectWidth + ObjectMargin) * 3 + ObjectMargin) / 2;
+    int StackInLineMargin = (STACKWIDTH - (ObjectWidth + ObjectMargin) * 3 + ObjectMargin) / 2;
 
     int X = ((ObjectHeight + ObjectMargin) * stack->quantity);
     X = X / STACKHEIGHT;
     int pX = X * (ObjectWidth + ObjectMargin) + StackInLineMargin + stack->x;
 
-    if (pX > (STACKWIDTH - StackInLineMargin*2) + stack->x)
-    {
+    if (pX > (STACKWIDTH - StackInLineMargin * 2) + stack->x) {
         return FALSE;
     }
 
@@ -24,7 +22,7 @@ Bool addObject(Stack *stack, Object *object)
     Y = Y / (ObjectHeight + ObjectMargin);
     int pY = Y * (ObjectHeight + ObjectMargin) + StackTopMargin + stack->y;
 
-    object->rect = (SDL_Rect){pX, pY, ObjectWidth, ObjectHeight};
+    object->rect = (SDL_Rect) {pX, pY, ObjectWidth, ObjectHeight};
 
     stack->quantity++;
     newPile->object = object;
@@ -34,15 +32,17 @@ Bool addObject(Stack *stack, Object *object)
     return TRUE;
 }
 
-Object *creat_Object(char Name[50])
-{
+Object *creat_Object(char Name[50]) {
     Object *object = malloc(sizeof(Object));
     object->ID = nbObjects;
     nbObjects++;
     strcpy(object->Name, Name);
-    for (int i = 0; i < 5; ++i) {
-        if (strcmp(Name, color[i].text) == 0)
-        {
+    object->r = 0;
+    object->g = 0;
+    object->b = 0;
+    object->a = 255;
+    for (int i = 0; i < (sizeof(color) / sizeof(color[0])); ++i) {
+        if (strcmp(Name, color[i].text) == 0) {
             object->r = color[i].r;
             object->g = color[i].g;
             object->b = color[i].b;
@@ -52,22 +52,16 @@ Object *creat_Object(char Name[50])
     return object;
 }
 
-int deleteObjectFromStack(Stack *stack, int ID)
-{
+int deleteObjectFromStack(Stack *stack, int ID) {
     Bool found = FALSE;
     ObjectPile *pile = stack->head;
     ObjectPile *prev = NULL;
     Stack *stackModified = NULL;
-    while (stack->head != NULL)
-    {
-        if (stack->head->object->ID == ID)
-        {
-            if (prev == NULL)
-            {
+    while (stack->head != NULL) {
+        if (stack->head->object->ID == ID) {
+            if (prev == NULL) {
                 stack->head = stack->head->next;
-            }
-            else
-            {
+            } else {
                 prev->next = stack->head->next;
             }
             free(stack->head);
@@ -84,17 +78,13 @@ int deleteObjectFromStack(Stack *stack, int ID)
 
     ObjectPile *pile2 = stack->head;
     int quantity = 0;
-    while (stack->head != NULL)
-    {
-        if (quantity < 5)
-        {
-            stack->head->object->rect = (SDL_Rect){stack->x + 80, stack->y + 20 + (40 * quantity), 100, 30};
+    while (stack->head != NULL) {
+        if (quantity < 5) {
+            stack->head->object->rect = (SDL_Rect) {stack->x + 80, stack->y + 20 + (40 * quantity), 100, 30};
+        } else {
+            stack->head->object->rect = (SDL_Rect) {stack->x + 200, stack->y + 20 + (40 * (quantity - 5)), 100, 30};
         }
-        else
-        {
-            stack->head->object->rect = (SDL_Rect){stack->x + 200, stack->y + 20 + (40 * (quantity - 5)), 100, 30};
-        }
-        
+
         quantity++;
         stack->head = stack->head->next;
     }
@@ -103,26 +93,19 @@ int deleteObjectFromStack(Stack *stack, int ID)
     return 0;
 }
 
-int deleteObject(Stack stacks[], int ID)
-{
+int deleteObject(Stack stacks[], int ID) {
     Bool found = FALSE;
     Stack *stackModified = NULL;
-    for (int i = 0; i < 6; i++)
-    {
+    for (int i = 0; i < 6; i++) {
         if (found)
             break;
         ObjectPile *pile = stacks[i].head;
         ObjectPile *prev = NULL;
-        while (stacks[i].head != NULL)
-        {
-            if (stacks[i].head->object->ID == ID)
-            {
-                if (prev == NULL)
-                {
+        while (stacks[i].head != NULL) {
+            if (stacks[i].head->object->ID == ID) {
+                if (prev == NULL) {
                     stacks[i].head = stacks[i].head->next;
-                }
-                else
-                {
+                } else {
                     prev->next = stacks[i].head->next;
                 }
                 free(stacks[i].head);
@@ -142,17 +125,15 @@ int deleteObject(Stack stacks[], int ID)
 
     ObjectPile *pile = stackModified->head;
     int quantity = 0;
-    while (stackModified->head != NULL)
-    {
-        if (quantity < 5)
-        {
-            stackModified->head->object->rect = (SDL_Rect){stackModified->x + 80, stackModified->y + 20 + (40 * quantity), 100, 30};
+    while (stackModified->head != NULL) {
+        if (quantity < 5) {
+            stackModified->head->object->rect = (SDL_Rect) {stackModified->x + 80,
+                                                            stackModified->y + 20 + (40 * quantity), 100, 30};
+        } else {
+            stackModified->head->object->rect = (SDL_Rect) {stackModified->x + 200,
+                                                            stackModified->y + 20 + (40 * (quantity - 5)), 100, 30};
         }
-        else
-        {
-            stackModified->head->object->rect = (SDL_Rect){stackModified->x + 200, stackModified->y + 20 + (40 * (quantity - 5)), 100, 30};
-        }
-        
+
         quantity++;
         stackModified->head = stackModified->head->next;
     }
@@ -160,16 +141,12 @@ int deleteObject(Stack stacks[], int ID)
     return 0;
 }
 
-int countObject(Stack stack[], char Name[50])
-{
+int countObject(Stack stack[], char Name[50]) {
     int count = 0;
-    for (int i = 0; i < 6; i++)
-    {
+    for (int i = 0; i < 6; i++) {
         ObjectPile *pile = stack[i].head;
-        while (stack[i].head != NULL)
-        {
-            if (strcmp(stack[i].head->object->Name, Name) == 0)
-            {
+        while (stack[i].head != NULL) {
+            if (strcmp(stack[i].head->object->Name, Name) == 0) {
                 count++;
             }
             stack[i].head = stack[i].head->next;
@@ -179,37 +156,114 @@ int countObject(Stack stack[], char Name[50])
     return count;
 }
 
-void creatText(Manager *manager, char text[1024], int indexColor, int quantity)
-{
-    printf("text : %s\n", text);
+void creatText(Manager *manager, char text[1024], int indexColor, int quantity) {
 
     Text *newText = malloc(sizeof(Text));
     newText->next = manager->head;
     manager->head = newText;
     strcpy(newText->text, text);
     newText->quantity = quantity;
+    newText->indexColor = indexColor;
 
-    newText->surface_text = TTF_RenderText_Solid(manager->font, newText->text, (SDL_Color){color[indexColor].r, color[indexColor].g, color[indexColor].b});
+    newText->surface_text = TTF_RenderText_Solid(manager->font, newText->text,
+                                                 (SDL_Color) {color[indexColor].r, color[indexColor].g,
+                                                              color[indexColor].b});
     newText->texture_text = SDL_CreateTextureFromSurface(manager->renderer, newText->surface_text);
 
-    newText->renderQuad = (SDL_Rect){manager->x + 20, manager->y + 50 + (manager->quantity * 25), newText->surface_text->w, 25};
+    newText->renderQuad = (SDL_Rect) {manager->x + 20, manager->y + 50 + (manager->quantity * 25),
+                                      newText->surface_text->w, 25};
 
     manager->quantity++;
 }
 
-void count(Manager *manager, Stack stack[], char name[])
-{
+void count(Manager *manager, Stack stack[], char name[]) {
     int count = countObject(stack, name);
     char text[1024];
-    snprintf(text, sizeof (text), "%s : %d", name, count);
+    snprintf(text, sizeof(text), "%s : %d", name, count);
 
     int indexColor = 0;
 
-    for (int i = 0; i < 5; ++i) {
-        if (strcmp(name, color[i].text) == 0)
-        {
+    for (int i = 0; i < (sizeof(color)/ sizeof(color[0])); ++i) {
+        if (strcmp(name, color[i].text) == 0) {
             indexColor = i;
         }
     }
     creatText(manager, text, indexColor, count);
+}
+
+void sortManagerByLetter(Manager *manager, Text** head_ref) {
+    Text* sorted = NULL;
+    Text* current = *head_ref;
+    while (current != NULL) {
+        Text* next = current->next;
+        Text** trail = &sorted;
+
+        while (*trail != NULL && strcmp((*trail)->text, current->text) < 0) {
+            trail = &((*trail)->next);
+        }
+
+        current->next = *trail;
+        *trail = current;
+
+        current = next;
+    }
+
+    *head_ref = sorted;
+
+    Text *temp = *head_ref;
+    int quantity = 0;
+    while (temp != NULL) {
+        temp->surface_text = TTF_RenderText_Solid(manager->font, temp->text,
+                                                  (SDL_Color) {color[temp->indexColor].r, color[temp->indexColor].g,
+                                                               color[temp->indexColor].b});
+        temp->texture_text = SDL_CreateTextureFromSurface(manager->renderer, temp->surface_text);
+
+        temp->renderQuad = (SDL_Rect) {manager->x + 20, manager->y + 50 + (quantity * 25),
+                                       temp->surface_text->w, 25};
+        quantity++;
+        temp = temp->next;
+    }
+}
+
+void sortManagerByQuantity(Manager *manager, Text **head) {
+    if (*head == NULL || (*head)->next == NULL) {
+        return;
+    }
+
+    Text *sorted = NULL;
+
+    Text *current = *head;
+    while (current != NULL) {
+        Text *next = current->next;
+
+        if (sorted == NULL || sorted->quantity >= current->quantity) {
+            current->next = sorted;
+            sorted = current;
+        } else {
+            Text *temp = sorted;
+            while (temp->next != NULL && temp->next->quantity < current->quantity) {
+                temp = temp->next;
+            }
+            current->next = temp->next;
+            temp->next = current;
+        }
+
+        current = next;
+    }
+
+    *head = sorted;
+
+    Text *temp = *head;
+    int quantity = 0;
+    while (temp != NULL) {
+        temp->surface_text = TTF_RenderText_Solid(manager->font, temp->text,
+                                                  (SDL_Color) {color[temp->indexColor].r, color[temp->indexColor].g,
+                                                               color[temp->indexColor].b});
+        temp->texture_text = SDL_CreateTextureFromSurface(manager->renderer, temp->surface_text);
+
+        temp->renderQuad = (SDL_Rect) {manager->x + 20, manager->y + 50 + (quantity * 25),
+                                       temp->surface_text->w, 25};
+        quantity++;
+        temp = temp->next;
+    }
 }

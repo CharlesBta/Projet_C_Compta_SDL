@@ -9,16 +9,18 @@
 #define STACKWIDTH (int) ((WINDOWWIDTH - 300) / 3)
 #define STACKHEIGHT (int) (WINDOWHEIGHT / 2)
 
-#define POLICE_SIZE 20
+#define POLICE_SIZE 23
 
-colors color[5]= {
+Colors color[8]= {
+        {.r = 0, .g = 0, .b = 0, .a = 255},
         {.r = 255, .g = 0, .b = 0, .a = 255, .text = "Pomme"},
         {.r = 0, .g = 255, .b = 0, .a = 255, .text = "Poire"},
         {.r = 255, .g = 255, .b = 0, .a = 255, .text = "Banane"},
         {.r = 255, .g = 165, .b = 0, .a = 255, .text = "Orange"},
-        {.r = 255, .g = 0, .b = 255, .a = 255, .text = "Fraise"}
+        {.r = 255, .g = 0, .b = 255, .a = 255, .text = "Fraise"},
+        {.r = 0, .g = 0, .b = 255, .a = 255, .text = "Myrtille"},
+        {.r = 0, .g = 165, .b = 255, .a = 255, .text = "Eau"}
 };
-
 
 #include "tools_for_stock.c"
 
@@ -32,7 +34,7 @@ Stack stacks[6] = {
         {.x = 2 * STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 150, .g=150, .b=150, .a=255, .ID = 5}
 };
 
-Manager manager = {.x = 3 * STACKWIDTH, .y = 0, .r = 0, .g = 0, .b = 0, .a = 255};
+Manager manager = {.x = 3 * STACKWIDTH, .y = 0, .r = 100, .g = 100, .b = 100, .a = 255};
 
 
 void fillBackgroundStack(SDL_Renderer *renderer) {
@@ -132,7 +134,7 @@ int main(int argc, char *argv[]) {
     // Couleur du texte
     SDL_Color textColorWhite = {255, 255, 255, 255}; // White text
     SDL_Color textColorBlack = {0, 0, 0, 255};       // Black text
-    SDL_Color textColorGray = {128, 128, 128, 255};  // Gray text
+    SDL_Color textColorGray = {148, 148, 148, 255};  // Gray text
 
     stacks[0].rect = (SDL_Rect) {stacks[0].x, stacks[0].y, stacks[0].w, stacks[0].h};
     stacks[1].rect = (SDL_Rect) {stacks[1].x, stacks[1].y, stacks[1].w, stacks[1].h};
@@ -145,9 +147,9 @@ int main(int argc, char *argv[]) {
     manager.renderer = renderer;
     manager.font = font;
 
-    manager.surface_text = TTF_RenderText_Solid(font, "Manager", textColorWhite);
+    manager.surface_text = TTF_RenderText_Solid(font, "Manager", textColorBlack);
     manager.texture_text = SDL_CreateTextureFromSurface(renderer, manager.surface_text);
-    manager.renderQuad = (SDL_Rect) {manager.x + 50, manager.y, manager.surface_text->w, manager.surface_text->h};
+    manager.renderQuad = (SDL_Rect) {manager.x + (((WINDOWWIDTH - 3 * STACKWIDTH))/2-(manager.surface_text->w/2)), manager.y+10, manager.surface_text->w, manager.surface_text->h};
 #pragma endregion
     SDL_Event event;
     Bool running = TRUE;
@@ -159,26 +161,23 @@ int main(int argc, char *argv[]) {
     addObject(&stacks[4], creat_Object("Pomme"));
     addObject(&stacks[5], creat_Object("Poire"));
     addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-
+    addObject(&stacks[5], creat_Object("Banane"));
+    addObject(&stacks[5], creat_Object("Banane"));
+    addObject(&stacks[5], creat_Object("Banane"));
+    addObject(&stacks[5], creat_Object("Banane"));
+    addObject(&stacks[5], creat_Object("Banane"));
+    addObject(&stacks[5], creat_Object("Banane"));
+    addObject(&stacks[5], creat_Object("Banane"));
+    addObject(&stacks[5], creat_Object("Eau"));
+    addObject(&stacks[5], creat_Object("Eau"));
     count(&manager, stacks, "Pomme");
     count(&manager, stacks, "Poire");
+    count(&manager, stacks, "Eau");
+    count(&manager, stacks, "Banane");
+    count(&manager, stacks, "Myrtille");
+
+//    sortManagerByQuantity(&manager, &manager.head);
+    sortManagerByLetter(&manager, &manager.head);
 
     while (running) {
         while (SDL_PollEvent(&event)) {
