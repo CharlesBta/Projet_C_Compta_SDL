@@ -1,6 +1,6 @@
 int nbObjects = 0;
 
-Bool addObject(Stack *stack, Object object)
+Bool addObject(Stack *stack, Object *object)
 {
     ObjectPile *newPile = malloc(sizeof(ObjectPile));
 
@@ -24,10 +24,10 @@ Bool addObject(Stack *stack, Object object)
     Y = Y / (ObjectHeight + ObjectMargin);
     int pY = Y * (ObjectHeight + ObjectMargin) + StackTopMargin + stack->y;
 
-    object.rect = (SDL_Rect){pX, pY, ObjectWidth, ObjectHeight};
+    object->rect = (SDL_Rect){pX, pY, ObjectWidth, ObjectHeight};
 
     stack->quantity++;
-    newPile->object = &object;
+    newPile->object = object;
     newPile->next = stack->head;
     stack->head = newPile;
 

@@ -121,6 +121,12 @@ int main(int argc, char *argv[]) {
     Bool running = TRUE;
     Mouse mouse;
 
+    addObject(&stacks[0], creat_Object("Pomme"));
+    addObject(&stacks[0], creat_Object("Pomme"));
+    addObject(&stacks[0], creat_Object("Pomme"));
+    addObject(&stacks[4], creat_Object("Pomme"));
+    addObject(&stacks[5], creat_Object("Pomme"));
+
     while (running) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
