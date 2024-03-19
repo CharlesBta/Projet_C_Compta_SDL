@@ -34,6 +34,7 @@ typedef struct ObjectPile{
 }ObjectPile;
 
 typedef struct Stack{
+    int ID;
     ObjectPile *head;
     int quantity;
     int x,y,h,w;

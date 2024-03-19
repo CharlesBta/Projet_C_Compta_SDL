@@ -1,20 +1,37 @@
 int nbObjects = 0;
 
-void addObject(Stack *stack, Object object)
+Bool addObject(Stack *stack, Object object)
 {
     ObjectPile *newPile = malloc(sizeof(ObjectPile));
-    if (stack->y + 20 + (40 * stack->quantity) < stack->y + stack->h - 40)
+
+    int StackTopMargin = STACKHEIGHT * 0.05;
+    int ObjectMargin = 20;
+    int ObjectWidth = 100;
+    int ObjectHeight = 30;
+    int StackInLineMargin =(STACKWIDTH - (ObjectWidth + ObjectMargin) * 3 + ObjectMargin) / 2;
+
+    int X = ((ObjectHeight + ObjectMargin) * stack->quantity);
+    X = X / STACKHEIGHT;
+    int pX = X * (ObjectWidth + ObjectMargin) + StackInLineMargin + stack->x;
+
+    if (pX > (STACKWIDTH - StackInLineMargin*2) + stack->x)
     {
-        object.rect = (SDL_Rect){(stack->x + STACKWIDTH*0.2), stack->y + 20 + (40 * stack->quantity), 100, 30};
+        return FALSE;
     }
-    else
-    {
-        object.rect = (SDL_Rect){stack->x + 200, stack->y + 20 + (40 * (stack->quantity - (stack->y + stack->h - 40)/40)), 100, 30};
-    }
+
+    int Y = (ObjectHeight + ObjectMargin) * stack->quantity;
+    Y = Y % STACKHEIGHT;
+    Y = Y / (ObjectHeight + ObjectMargin);
+    int pY = Y * (ObjectHeight + ObjectMargin) + StackTopMargin + stack->y;
+
+    object.rect = (SDL_Rect){pX, pY, ObjectWidth, ObjectHeight};
+
     stack->quantity++;
     newPile->object = &object;
     newPile->next = stack->head;
     stack->head = newPile;
+
+    return TRUE;
 }
 
 Object *creat_Object(char Name[50])

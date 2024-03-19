@@ -6,8 +6,8 @@
 #define WINDOWHEIGHT 500
 #define FPS 60
 
-#define STACKWIDTH WINDOWWIDTH/3
-#define STACKHEIGHT WINDOWHEIGHT/2
+#define STACKWIDTH (int) (WINDOWWIDTH / 3)
+#define STACKHEIGHT (int) (WINDOWHEIGHT / 2)
 
 #define POLICE_SIZE 20
 
@@ -15,12 +15,12 @@
 
 // Définition des stacks
 Stack stacks[6] = {
-        {.x = 0, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 0, .g=0, .b=255, .a=255},
-        {.x = STACKWIDTH, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 0, .g=255, .b=0, .a=255},
-        {.x = 2 * STACKWIDTH, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=0, .b=0, .a=255},
-        {.x = 0, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=165, .b=0, .a=255},
-        {.x = STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 128, .g=0, .b=128, .a=255},
-        {.x = 2 * STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=192, .b=203, .a=255}
+        {.x = 0, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 0, .g=0, .b=255, .a=255, .ID = 0},
+        {.x = STACKWIDTH, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 0, .g=255, .b=0, .a=255, .ID = 1},
+        {.x = 2 * STACKWIDTH, .y = 0, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=0, .b=0, .a=255, .ID = 2},
+        {.x = 0, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=165, .b=0, .a=255, .ID = 3},
+        {.x = STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 128, .g=0, .b=128, .a=255, .ID = 4},
+        {.x = 2 * STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=192, .b=203, .a=255, .ID = 5}
 };
 
 
@@ -120,10 +120,6 @@ int main(int argc, char *argv[]) {
     SDL_Event event;
     Bool running = TRUE;
     Mouse mouse;
-
-    addObject(&stacks[0], *creat_Object("Objet 1"));
-    addObject(&stacks[3], *creat_Object("Objet 1"));
-    addObject(&stacks[5], *creat_Object("Objet 2"));
 
     while (running) {
         while (SDL_PollEvent(&event)) {
