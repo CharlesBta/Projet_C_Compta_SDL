@@ -2,11 +2,11 @@
 #include "struct.h"
 
 #define WINDOWTITLE "SDL2 - Projet"
-#define WINDOWWIDTH 1200
+#define WINDOWWIDTH 1300
 #define WINDOWHEIGHT 500
 #define FPS 60
 
-#define STACKWIDTH (int) (WINDOWWIDTH / 3)
+#define STACKWIDTH (int) ((WINDOWWIDTH - 300) / 3)
 #define STACKHEIGHT (int) (WINDOWHEIGHT / 2)
 
 #define POLICE_SIZE 20
@@ -22,6 +22,8 @@ Stack stacks[6] = {
         {.x = STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 128, .g=0, .b=128, .a=255, .ID = 4},
         {.x = 2 * STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 255, .g=192, .b=203, .a=255, .ID = 5}
 };
+
+Manager manager = {.x = 3 * STACKWIDTH, .y = 0, .r = 0, .g = 0, .b = 0, .a = 255};
 
 
 void fillBackgroundStack(SDL_Renderer *renderer) {
@@ -43,6 +45,11 @@ void fillBackgroundStack(SDL_Renderer *renderer) {
     SDL_SetRenderDrawColor(renderer, stacks[5].r, stacks[5].g, stacks[5].b, stacks[5].a);
     SDL_RenderFillRect(renderer, &stacks[5].rect);
 
+    SDL_SetRenderDrawColor(renderer, manager.r, manager.g, manager.b, manager.a);
+    SDL_RenderFillRect(renderer, &manager.rect);
+
+    SDL_RenderCopy(renderer, manager.texture_text, NULL, &manager.renderQuad);
+
 }
 
 void fillObjectInStack(SDL_Renderer *renderer) {
@@ -54,6 +61,14 @@ void fillObjectInStack(SDL_Renderer *renderer) {
             stacks[i].head = stacks[i].head->next;
         }
         stacks[i].head = pile;
+    }
+}
+
+void fillManagerText(SDL_Renderer *renderer, Manager *manager) {
+    Text *text = manager->head;
+    while (text != NULL) {
+        SDL_RenderCopy(renderer, text->texture_text, NULL, &text->renderQuad);
+        text = text->next;
     }
 }
 
@@ -116,6 +131,14 @@ int main(int argc, char *argv[]) {
     stacks[3].rect = (SDL_Rect) {stacks[3].x, stacks[3].y, stacks[3].w, stacks[3].h};
     stacks[4].rect = (SDL_Rect) {stacks[4].x, stacks[4].y, stacks[4].w, stacks[4].h};
     stacks[5].rect = (SDL_Rect) {stacks[5].x, stacks[5].y, stacks[5].w, stacks[5].h};
+    manager.rect = (SDL_Rect) {manager.x, manager.y, WINDOWWIDTH-3*STACKWIDTH, WINDOWHEIGHT};
+
+    manager.renderer = renderer;
+    manager.font = font;
+
+    manager.surface_text = TTF_RenderText_Solid(font, "Manager", textColorWhite);
+    manager.texture_text = SDL_CreateTextureFromSurface(renderer, manager.surface_text);
+    manager.renderQuad = (SDL_Rect) {manager.x + 50, manager.y, manager.surface_text->w, manager.surface_text->h};
 #pragma endregion
     SDL_Event event;
     Bool running = TRUE;
@@ -126,8 +149,28 @@ int main(int argc, char *argv[]) {
     addObject(&stacks[0], creat_Object("Pomme"));
     addObject(&stacks[4], creat_Object("Pomme"));
     addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
+    addObject(&stacks[5], creat_Object("Poire"));
 
-    printf("count : %d\n", countObject(stacks, "Pomme"));
+    count(&manager, stacks, "Pomme");
+    count(&manager, stacks, "Poire");
+
     while (running) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -144,6 +187,7 @@ int main(int argc, char *argv[]) {
         // Dessiner la grille
         fillBackgroundStack(renderer);
         fillObjectInStack(renderer);
+        fillManagerText(renderer, &manager);
 
         SDL_RenderPresent(renderer);
         SDL_Delay(1000 / FPS);

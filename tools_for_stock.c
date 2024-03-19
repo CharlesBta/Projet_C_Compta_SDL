@@ -6,7 +6,7 @@ Bool addObject(Stack *stack, Object *object)
 
     int StackTopMargin = STACKHEIGHT * 0.05;
     int ObjectMargin = 20;
-    int ObjectWidth = 100;
+    int ObjectWidth = 80;
     int ObjectHeight = 30;
     int StackInLineMargin =(STACKWIDTH - (ObjectWidth + ObjectMargin) * 3 + ObjectMargin) / 2;
 
@@ -170,3 +170,27 @@ int countObject(Stack stack[], char Name[50])
     return count;
 }
 
+void creatText(Manager *manager, char text[1024])
+{
+    printf("text : %s\n", text);
+
+    Text *newText = malloc(sizeof(Text));
+    newText->next = manager->head;
+    manager->head = newText;
+    strcpy(newText->text, text);
+
+    newText->surface_text = TTF_RenderText_Solid(manager->font, newText->text, (SDL_Color){0, 255, 255});
+    newText->texture_text = SDL_CreateTextureFromSurface(manager->renderer, newText->surface_text);
+
+    newText->renderQuad = (SDL_Rect){manager->x + 20, manager->y + 50 + (manager->quantity * 25), newText->surface_text->w, 25};
+
+    manager->quantity++;
+}
+
+void count(Manager *manager, Stack stack[], char name[])
+{
+    int count = countObject(stack, name);
+    char text[1024];
+    snprintf(text, sizeof (text), "%s : %d", name, count);
+    creatText(manager, text);
+}

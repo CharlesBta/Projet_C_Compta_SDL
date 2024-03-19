@@ -45,3 +45,27 @@ typedef struct Stack{
     SDL_Rect renderQuad;
     SDL_Rect rect;
 }Stack;
+
+typedef struct Text{
+    char text[1024];
+    int x,y;
+    int r, g, b, a;
+    SDL_Surface *surface_text;
+    SDL_Texture *texture_text;
+    SDL_Rect renderQuad;
+    struct Text *next;
+}Text;
+
+typedef struct Manager{
+    char title[1024];
+    int x,y;
+    int r, g, b, a;
+    int quantity;
+    SDL_Renderer *renderer;
+    TTF_Font *font;
+    SDL_Surface *surface_text;
+    SDL_Texture *texture_text;
+    SDL_Rect renderQuad;
+    SDL_Rect rect;
+    Text *head;
+}Manager;
