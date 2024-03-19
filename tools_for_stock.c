@@ -179,7 +179,7 @@ int countObject(Stack stack[], char Name[50])
     return count;
 }
 
-void creatText(Manager *manager, char text[1024], int indexColor)
+void creatText(Manager *manager, char text[1024], int indexColor, int quantity)
 {
     printf("text : %s\n", text);
 
@@ -187,6 +187,7 @@ void creatText(Manager *manager, char text[1024], int indexColor)
     newText->next = manager->head;
     manager->head = newText;
     strcpy(newText->text, text);
+    newText->quantity = quantity;
 
     newText->surface_text = TTF_RenderText_Solid(manager->font, newText->text, (SDL_Color){color[indexColor].r, color[indexColor].g, color[indexColor].b});
     newText->texture_text = SDL_CreateTextureFromSurface(manager->renderer, newText->surface_text);
@@ -210,5 +211,5 @@ void count(Manager *manager, Stack stack[], char name[])
             indexColor = i;
         }
     }
-    creatText(manager, text, indexColor);
+    creatText(manager, text, indexColor, count);
 }

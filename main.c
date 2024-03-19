@@ -11,11 +11,6 @@
 
 #define POLICE_SIZE 20
 
-typedef struct colors {
-    int r, g, b, a;
-    char text[1024];
-} colors;
-
 colors color[5]= {
         {.r = 255, .g = 0, .b = 0, .a = 255, .text = "Pomme"},
         {.r = 0, .g = 255, .b = 0, .a = 255, .text = "Poire"},
