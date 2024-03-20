@@ -34,6 +34,9 @@ Stack stacks[6] = {
         {.x = 2 * STACKWIDTH, .y = STACKHEIGHT, .w = STACKWIDTH, .h = STACKHEIGHT, .r = 150, .g=150, .b=150, .a=255, .ID = 5}
 };
 
+Button sortButtonByQuantity = {.x = 3 * STACKWIDTH + 80, .y = WINDOWHEIGHT - 120, .w = 100, .h = 50, .text = "Sort by quantity"};
+Button sortButtonByLetter = {.x = 3 * STACKWIDTH + 80, .y = WINDOWHEIGHT - 70, .w = 100, .h = 50, .text = "Sort by letter"};
+
 Manager manager = {.x = 3 * STACKWIDTH, .y = 0, .r = 100, .g = 100, .b = 100, .a = 255};
 
 
@@ -63,6 +66,16 @@ void fillBackgroundStack(SDL_Renderer *renderer) {
 
 }
 
+void fillButtons(SDL_Renderer *renderer) {
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(renderer, &sortButtonByQuantity.rect);
+    SDL_RenderCopy(renderer, sortButtonByQuantity.texture_text, NULL, &sortButtonByQuantity.renderQuad);
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(renderer, &sortButtonByLetter.rect);
+    SDL_RenderCopy(renderer, sortButtonByLetter.texture_text, NULL, &sortButtonByLetter.renderQuad);
+}
+
 void fillObjectInStack(SDL_Renderer *renderer) {
     for (int i = 0; i < 6; i++) {
         ObjectPile *pile = stacks[i].head;
@@ -83,6 +96,14 @@ void fillManagerText(SDL_Renderer *renderer, Manager *manager) {
     }
 }
 
+Bool handleOnZone(Mouse mouse, SDL_Rect zone)
+{
+    if (mouse.x >= zone.x && mouse.x <= zone.x + zone.w && mouse.y >= zone.y && mouse.y <= zone.y + zone.h)
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
 
 int main(int argc, char *argv[]) {
 #pragma region Initialisation de SDL
@@ -150,40 +171,63 @@ int main(int argc, char *argv[]) {
     manager.surface_text = TTF_RenderText_Solid(font, "Manager", textColorBlack);
     manager.texture_text = SDL_CreateTextureFromSurface(renderer, manager.surface_text);
     manager.renderQuad = (SDL_Rect) {manager.x + (((WINDOWWIDTH - 3 * STACKWIDTH))/2-(manager.surface_text->w/2)), manager.y+10, manager.surface_text->w, manager.surface_text->h};
+
+    sortButtonByQuantity.surface_text = TTF_RenderText_Solid(font, sortButtonByQuantity.text, textColorBlack);
+    sortButtonByQuantity.texture_text = SDL_CreateTextureFromSurface(renderer, sortButtonByQuantity.surface_text);
+    sortButtonByQuantity.renderQuad = (SDL_Rect) {sortButtonByQuantity.x + 5, sortButtonByQuantity.y + 2, sortButtonByQuantity.surface_text->w, sortButtonByQuantity.surface_text->h};
+    sortButtonByQuantity.rect = (SDL_Rect) {sortButtonByQuantity.x, sortButtonByQuantity.y, sortButtonByQuantity.surface_text->w + 20, sortButtonByQuantity.h};
+
+    sortButtonByLetter.surface_text = TTF_RenderText_Solid(font, sortButtonByLetter.text, textColorBlack);
+    sortButtonByLetter.texture_text = SDL_CreateTextureFromSurface(renderer, sortButtonByLetter.surface_text);
+    sortButtonByLetter.renderQuad = (SDL_Rect) {sortButtonByLetter.x + 5, sortButtonByLetter.y + 2, sortButtonByLetter.surface_text->w, sortButtonByLetter.surface_text->h};
+    sortButtonByLetter.rect = (SDL_Rect) {sortButtonByLetter.x , sortButtonByLetter.y, sortButtonByLetter.surface_text->w + 20, sortButtonByLetter.h};
+
+
 #pragma endregion
     SDL_Event event;
     Bool running = TRUE;
     Mouse mouse;
 
-    addObject(&stacks[0], creat_Object("Pomme"));
-    addObject(&stacks[0], creat_Object("Pomme"));
-    addObject(&stacks[0], creat_Object("Pomme"));
-    addObject(&stacks[4], creat_Object("Pomme"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Poire"));
-    addObject(&stacks[5], creat_Object("Banane"));
-    addObject(&stacks[5], creat_Object("Banane"));
-    addObject(&stacks[5], creat_Object("Banane"));
-    addObject(&stacks[5], creat_Object("Banane"));
-    addObject(&stacks[5], creat_Object("Banane"));
-    addObject(&stacks[5], creat_Object("Banane"));
-    addObject(&stacks[5], creat_Object("Banane"));
-    addObject(&stacks[5], creat_Object("Eau"));
-    addObject(&stacks[5], creat_Object("Eau"));
+    for (int i = 0; i < 6; ++i) {
+        for (int j = 0; j < 15; ++j) {
+            int index = rand() % 8;
+            while (index == 0){
+                index = rand() % 8;
+            }
+
+            addObject(&stacks[i], creat_Object(color[index].text));
+        }
+    }
+
     count(&manager, stacks, "Pomme");
     count(&manager, stacks, "Poire");
     count(&manager, stacks, "Eau");
     count(&manager, stacks, "Banane");
     count(&manager, stacks, "Myrtille");
+    count(&manager, stacks, "Orange");
+    count(&manager, stacks, "Fraise");
+
+    deleteObject(&stacks[0], 0);
 
 //    sortManagerByQuantity(&manager, &manager.head);
-    sortManagerByLetter(&manager, &manager.head);
+//    sortManagerByLetter(&manager, &manager.head);
 
     while (running) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
                     running = FALSE;
+                    break;
+                case SDL_MOUSEBUTTONDOWN:
+                    SDL_GetMouseState(&mouse.x, &mouse.y);
+                    if (handleOnZone(mouse, sortButtonByQuantity.rect))
+                    {
+                        sortManagerByQuantity(&manager, &manager.head);
+                    }
+                    if (handleOnZone(mouse, sortButtonByLetter.rect))
+                    {
+                        sortManagerByLetter(&manager, &manager.head);
+                    }
                     break;
             }
         }
@@ -196,6 +240,7 @@ int main(int argc, char *argv[]) {
         fillBackgroundStack(renderer);
         fillObjectInStack(renderer);
         fillManagerText(renderer, &manager);
+        fillButtons(renderer);
 
         SDL_RenderPresent(renderer);
         SDL_Delay(1000 / FPS);

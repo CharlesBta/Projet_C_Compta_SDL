@@ -52,47 +52,6 @@ Object *creat_Object(char Name[50]) {
     return object;
 }
 
-int deleteObjectFromStack(Stack *stack, int ID) {
-    Bool found = FALSE;
-    ObjectPile *pile = stack->head;
-    ObjectPile *prev = NULL;
-    Stack *stackModified = NULL;
-    while (stack->head != NULL) {
-        if (stack->head->object->ID == ID) {
-            if (prev == NULL) {
-                stack->head = stack->head->next;
-            } else {
-                prev->next = stack->head->next;
-            }
-            free(stack->head);
-            found = TRUE;
-        }
-        prev = stack->head;
-        stack->head = stack->head->next;
-        if (found)
-            break;
-    }
-    stack->head = pile;
-    if (!found)
-        return 1;
-
-    ObjectPile *pile2 = stack->head;
-    int quantity = 0;
-    while (stack->head != NULL) {
-        if (quantity < 5) {
-            stack->head->object->rect = (SDL_Rect) {stack->x + 80, stack->y + 20 + (40 * quantity), 100, 30};
-        } else {
-            stack->head->object->rect = (SDL_Rect) {stack->x + 200, stack->y + 20 + (40 * (quantity - 5)), 100, 30};
-        }
-
-        quantity++;
-        stack->head = stack->head->next;
-    }
-    stack->head = pile;
-
-    return 0;
-}
-
 int deleteObject(Stack stacks[], int ID) {
     Bool found = FALSE;
     Stack *stackModified = NULL;
@@ -126,14 +85,28 @@ int deleteObject(Stack stacks[], int ID) {
     ObjectPile *pile = stackModified->head;
     int quantity = 0;
     while (stackModified->head != NULL) {
-        if (quantity < 5) {
-            stackModified->head->object->rect = (SDL_Rect) {stackModified->x + 80,
-                                                            stackModified->y + 20 + (40 * quantity), 100, 30};
-        } else {
-            stackModified->head->object->rect = (SDL_Rect) {stackModified->x + 200,
-                                                            stackModified->y + 20 + (40 * (quantity - 5)), 100, 30};
+
+        int StackTopMargin = STACKHEIGHT * 0.05;
+        int ObjectMargin = 20;
+        int ObjectWidth = 80;
+        int ObjectHeight = 30;
+        int StackInLineMargin = (STACKWIDTH - (ObjectWidth + ObjectMargin) * 3 + ObjectMargin) / 2;
+
+        int X = ((ObjectHeight + ObjectMargin) * quantity);
+        X = X / STACKHEIGHT;
+        int pX = X * (ObjectWidth + ObjectMargin) + StackInLineMargin + stackModified->x;
+
+        if (pX > (STACKWIDTH - StackInLineMargin * 2) + stackModified->x) {
+            return FALSE;
         }
 
+        int Y = (ObjectHeight + ObjectMargin) * quantity;
+        Y = Y % STACKHEIGHT;
+        Y = Y / (ObjectHeight + ObjectMargin);
+        int pY = Y * (ObjectHeight + ObjectMargin) + StackTopMargin + stackModified->y;
+
+        stackModified->head->object->rect = (SDL_Rect) {pX,
+                                                        pY, ObjectWidth, ObjectHeight};
         quantity++;
         stackModified->head = stackModified->head->next;
     }
@@ -183,7 +156,7 @@ void count(Manager *manager, Stack stack[], char name[]) {
 
     int indexColor = 0;
 
-    for (int i = 0; i < (sizeof(color)/ sizeof(color[0])); ++i) {
+    for (int i = 0; i < (sizeof(color) / sizeof(color[0])); ++i) {
         if (strcmp(name, color[i].text) == 0) {
             indexColor = i;
         }
@@ -191,12 +164,12 @@ void count(Manager *manager, Stack stack[], char name[]) {
     creatText(manager, text, indexColor, count);
 }
 
-void sortManagerByLetter(Manager *manager, Text** head_ref) {
-    Text* sorted = NULL;
-    Text* current = *head_ref;
+void sortManagerByLetter(Manager *manager, Text **head_ref) {
+    Text *sorted = NULL;
+    Text *current = *head_ref;
     while (current != NULL) {
-        Text* next = current->next;
-        Text** trail = &sorted;
+        Text *next = current->next;
+        Text **trail = &sorted;
 
         while (*trail != NULL && strcmp((*trail)->text, current->text) < 0) {
             trail = &((*trail)->next);

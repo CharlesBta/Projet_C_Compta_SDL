@@ -22,6 +22,19 @@ typedef struct Mouse
     int y;
 } Mouse;
 
+typedef struct Button
+{
+    int x;
+    int y;
+    int w;
+    int h;
+    char text[1024];
+    SDL_Surface *surface_text;
+    SDL_Texture *texture_text;
+    SDL_Rect renderQuad;
+    SDL_Rect rect;
+} Button;
+
 typedef struct Colors {
     int r, g, b, a;
     char text[1024];
