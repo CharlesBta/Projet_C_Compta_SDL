@@ -13,7 +13,8 @@ Bool addObject(Stack *stack, Object *object) {
     X = X / STACKHEIGHT;
     int pX = X * (ObjectWidth + ObjectMargin) + StackInLineMargin + stack->x;
 
-    if (pX > (STACKWIDTH - StackInLineMargin * 2) + stack->x) {
+    if (pX > (STACKWIDTH) + stack->x) {
+        printf("coucou\n");
         return FALSE;
     }
 
@@ -50,6 +51,17 @@ Object *creat_Object(char Name[50]) {
         }
     }
     return object;
+}
+
+Bool popFirst(Stack *stack)
+{
+    if (stack->head == NULL)
+        return FALSE;
+    ObjectPile *newList = stack->head;
+    newList = newList->next;
+    free(stack->head);
+    stack->head = newList;
+    return TRUE;
 }
 
 int deleteObject(Stack stacks[], int ID) {
