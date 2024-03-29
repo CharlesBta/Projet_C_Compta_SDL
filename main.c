@@ -1,5 +1,6 @@
 #include "include.h"
 #include "struct.h"
+#include <pthread.h>
 
 #define WINDOWTITLE "SDL2 - Projet"
 #define WINDOWWIDTH 1300
@@ -11,18 +12,23 @@
 
 #define POLICE_SIZE 23
 
-Colors color[8]= {
+Colors color[6]= {
         {.r = 0, .g = 0, .b = 0, .a = 255},
         {.r = 255, .g = 0, .b = 0, .a = 255, .text = "Pomme"},
         {.r = 0, .g = 255, .b = 0, .a = 255, .text = "Poire"},
         {.r = 255, .g = 255, .b = 0, .a = 255, .text = "Banane"},
         {.r = 255, .g = 165, .b = 0, .a = 255, .text = "Orange"},
         {.r = 255, .g = 0, .b = 255, .a = 255, .text = "Fraise"},
-        {.r = 0, .g = 0, .b = 255, .a = 255, .text = "Myrtille"},
-        {.r = 0, .g = 165, .b = 255, .a = 255, .text = "Eau"}
 };
 
 #include "tools_for_stock.c"
+
+typedef struct arg{
+    Stack *stacks;
+    int indexMainStack;
+}arg;
+
+#include "tools_sort_stack.c"
 
 // Définition des stacks
 Stack stacks[6] = {
@@ -103,6 +109,14 @@ Bool handleOnZone(Mouse mouse, SDL_Rect zone)
         return TRUE;
     }
     return FALSE;
+}
+
+int contentMain(SDL_Renderer *renderer)
+{
+    fillBackgroundStack(renderer);
+    fillObjectInStack(renderer);
+    fillManagerText(renderer, &manager);
+    fillButtons(renderer);
 }
 
 int main(int argc, char *argv[]) {
@@ -188,22 +202,16 @@ int main(int argc, char *argv[]) {
     Bool running = TRUE;
     Mouse mouse;
 
-    for (int i = 0; i < 6; ++i) {
-        for (int j = 0; j < 15; ++j) {
-            int index = rand() % 8;
-            while (index == 0){
-                index = rand() % 8;
-            }
-
-            addObject(&stacks[i], creat_Object(color[index].text));
-        }
+    for (int i = 0; i < 5; ++i) {
+        addObject(&stacks[0], creat_Object("Pomme"));
+        addObject(&stacks[0], creat_Object("Poire"));
+        addObject(&stacks[0], creat_Object("Banane"));
     }
+    addObject(&stacks[0], creat_Object("Poire"));
 
     count(&manager, stacks, "Pomme");
     count(&manager, stacks, "Poire");
-    count(&manager, stacks, "Eau");
     count(&manager, stacks, "Banane");
-    count(&manager, stacks, "Myrtille");
     count(&manager, stacks, "Orange");
     count(&manager, stacks, "Fraise");
 
@@ -211,6 +219,11 @@ int main(int argc, char *argv[]) {
 
 //    sortManagerByQuantity(&manager, &manager.head);
 //    sortManagerByLetter(&manager, &manager.head);
+    int done = 0;
+
+
+    arg args = {.stacks = stacks, .indexMainStack = 0};
+    pthread_t t1;
 
     while (running) {
         while (SDL_PollEvent(&event)) {
@@ -237,10 +250,13 @@ int main(int argc, char *argv[]) {
         SDL_RenderClear(renderer);
 
         // Dessiner la grille
-        fillBackgroundStack(renderer);
-        fillObjectInStack(renderer);
-        fillManagerText(renderer, &manager);
-        fillButtons(renderer);
+        contentMain(renderer);
+        if (done == 0)
+        {
+            pthread_create(&t1, NULL, (void *(*)(void *)) sort, &args);
+            done = 1;
+        }
+
 
         SDL_RenderPresent(renderer);
         SDL_Delay(1000 / FPS);
