@@ -61,6 +61,8 @@ Bool popFirst(Stack *stack)
     newList = newList->next;
     free(stack->head);
     stack->head = newList;
+    stack->quantity--;
+    printf("pop stack id: %d quantity : %d\n", stack->ID ,stack->quantity);
     return TRUE;
 }
 
@@ -123,6 +125,7 @@ int deleteObject(Stack stacks[], int ID) {
         stackModified->head = stackModified->head->next;
     }
     stackModified->head = pile;
+    stackModified->quantity = quantity;
     return 0;
 }
 

@@ -75,22 +75,28 @@ void *sort(arg *args) {
             {
                 printf("crash (1)\n");
                 return NULL;
-            }
-            if (popFirst(&stacks[index]) == FALSE)
+            }else
             {
-                printf("crash (2)\n");
-                return NULL;
+                mainStack.quantity--;
+                ObjectPile *newList = mainStack.head;
+                newList = newList->next;
+                mainStack.head = NULL;
+                mainStack.head = newList;
             }
         }
-        SDL_Delay(10);
+        SDL_Delay(100);
     }
     for (int i = 0; i < 5; ++i) {
         if (sortedElements[i].indexStack != -1)
         {
-            printf("%d\n", stacks[sortedElements[i].indexStack].quantity);
-            for (int i = 0; i < 6; i++)
+            for (ObjectPile *pile = stacks[sortedElements[i].indexStack].head; pile != NULL; pile = pile->next)
             {
-                printf("coucou\n");
+                if (addObject(&mainStack, pile->object) == FALSE)
+                {
+                    printf("crash (2)\n");
+                    return NULL;
+                }
+                SDL_Delay(100);
             }
         }
     }
